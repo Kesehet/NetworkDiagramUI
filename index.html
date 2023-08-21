@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Dashboard</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body{
+      background-color: #000000;
+      font-family: 'Poppins', sans-serif;
+    }
+    .primaryColor{
+      background-color: #141416;
+    }
+    .secondaryColor{
+      background-color: #0c0c0d;
+    }
+    .featureColor{
+        background-color: #e75626;
+    }
+    .featureColorText{
+        color:#e75626 !important;
+    }
+    .alignVerticallyCenter{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .simpleHeading{
+      color: white;
+      font-weight: 400;
+      font-size: 1.4rem;
+      line-height: 1.5rem;
+    }
+    .preSimpleHeading{
+      color: #565657;
+      font-weight: 600;
+      font-size: 0.7rem;
+    }
+    h1{
+        font-size: 30px;
+    }
+    .w3-button{
+      background-color: #e75626;
+      font-size: 10px;
+      color: white;   
+      animation: breathe 10s ease-in-out infinite;
+    }
+    /* adding tiny for smaller padding */
+    .w3-padding-tiny{
+      padding: 2px 4px !important;
+    }
+    /* Simple blink animation */
+    .blink {
+      animation: blinker 10s linear infinite;
+    }
+    /* Blinker key frames */
+    @keyframes blinker {
+      50% {
+        opacity: 0.3;
+        transform: scale(1.01);
+      }
+    }
+    @keyframes breathe {
+      0%{
+        transform: scale(1);
+      }
+      50%{
+        transform: scale(1.01);
+      }
+      100%{
+        transform: scale(1);
+      }
+    }
+    .breathe{
+      animation: breathe 10s ease-in-out infinite;
+    }
+    .box:hover {
+      transform: scale(1.005);
+    }
+    .top-card{
+      max-height: 55vh;
+    }
+    .bottom-card{
+      max-height: 25vh;
+      
+      min-width: 25vw;
+    }
+    .sticky-bottom-menu {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+    }
+
+    
+
+/* scrollable x should only work when on mobile phones */
+  @media screen and (min-width: 700px) {
+    .scrollable-x {
+      flex: 1;
+      display: flex;
+      overflow: visible;
+      overflow-x: scroll;
+      scrollbar-width: none; /* Hide the scrollbar for Firefox */
+      -ms-overflow-style: none; /* Hide the scrollbar for Internet Explorer and Edge */
+    }
+
+    .scrollable-x::-webkit-scrollbar {
+      width: 0; /* Hide the scrollbar for Chrome, Safari, and Opera */
+    }
+  }
+  .scrollable-x{
+    align-items: center;
+  }
+  .w3-orange{
+    background-color: #e75626 !important;
+  }
+  .menu-back{
+    width: 20%;
+    transform: translate(0px, 25px);
+    z-index: -100;
+    animation: menu-back 5s ease-in-out infinite;
+  }
+
+  @keyframes menu-back {
+    0%{
+      transform: translate(0px, 25px);
+    }
+    50%{
+      transform: translate(0px, 30px);
+    }
+    
+  }
+
+  .bottom-menu-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    transition: background-color 1s;
+    align-content: center;
+    flex-direction: row;
+  }
+    .bottom-menu-item {
+      position: relative;
+      margin: 0 10px;
+      padding: 10px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: color 0.3s, transform 0.3s;
+      transform-origin: center center;
+    }
+    .bottom-menu-item::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background-color: #e75626;
+      transition: width 0.3s, left 0.3s;
+    }
+    .bottom-menu-item:hover {
+      color: #e75626;
+      transform: scale(1.1);
+    }
+    .bottom-menu-item:hover::after {
+      width: 100%;
+      left: 0;
+    }
+    .profile-section {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 5px;
+    }
+    .profile-image {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+    .profile-text {
+      font-size: 0.8rem;
+      color: white;
+    }
+    .one-line-div {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .box{
+      position: relative;
+    }
+    .notification{
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #e75626;
+      color: white;
+      padding: 5px;
+      width: 25px;
+      height: 25px;
+      border-radius: 100%;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+
+  </style>
+</head>
+<body style="">
+    <div class="w3-container" >
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+
+<style>
+    #canvas {
+        width: 100vw;
+        height: 100vw;
+    }
+    .context-menu {
+        position: absolute;
+        display: inline-block;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        z-index: 1000; // To ensure it's on top
+    }
+
+    .context-menu a {
+        display: block;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: black;
+    }
+
+    .context-menu a:hover {
+        background-color: #f1f1f1;
+    }
+
+        .properties-panel-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 33.33%; /* 1/3 of the screen */
+            background-color: rgba(0,0,0,0.9); /* Semi-transparent background */
+            color: white;
+            transition: height 0.5s; /* Animation effect */
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        .properties-panel-overlay:hover {
+            height: 66.66%; /* 2/3 of the screen on mouseover */
+        }
+    </style>
+
+<svg id="canvas"></svg>
+<div id="properties-panel" class="w3-container w3-center w3-animate-bottom properties-panel-overlay">
+    Properties Panel
+</div>
+
+
+
+
+
+
+
+<script>
+    class Canvas {
+        constructor(selector) {
+            this.svg = d3.select(selector);
+            this.zoom = d3.zoom()
+            .scaleExtent([0.2, 5])
+            .on("zoom", () => this.zoomed());
+            this.svg.call(this.zoom);
+            this.regions = [];
+            this.id = "canvas";
+            this.g = this.svg.append("g");
+            this.svg.on("contextmenu", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                showContextMenu(
+                        [
+                            { label: "Add Region",icon: "fa-globe",description:"Add a new region", action: () =>  openPropertiesPanel(this,"Add Region") },
+                        ],
+                        d3.event.x,
+                        d3.event.y,
+                        this
+
+                    );
+                
+            })
+        }
+
+        zoomed() {
+            this.g.attr("transform", d3.event.transform);
+        }
+
+        addRegion(region) {
+            this.regions.push(region);
+        }
+
+        save() {
+            const regions = [];
+            // Iterate through all regions and save their state
+            // Assuming you have a way to access all regions
+            this.regions.forEach(region => {
+                const groups = [];
+                region.groups.forEach(group => {
+                    const virtualMachines = [];
+                    group.virtualMachines.forEach(vm => {
+                        virtualMachines.push({
+                            id: vm.id,
+                            position: vm.position,
+                            size: vm.size
+                            // Add other properties as needed
+                        });
+                    });
+                    groups.push({
+                        id: group.id,
+                        position: group.position,
+                        size: group.size,
+                        virtualMachines: virtualMachines
+                        // Add other properties as needed
+                    });
+                });
+                regions.push({
+                    id: region.id,
+                    position: region.position,
+                    size: region.size,
+                    groups: groups
+                    // Add other properties as needed
+                });
+            });
+            return JSON.stringify({ regions: regions });
+        }
+
+        load(json) {
+            const data = JSON.parse(json);
+            // Clear the current canvas
+            this.clear();
+            // Reconstruct the regions, groups, and virtual machines
+            data.regions.forEach(regionData => {
+                const region = new Region(regionData.id, this, regionData.position, regionData.size, regionData.color);
+                regionData.groups.forEach(groupData => {
+                    const group = new Group(groupData.id, region, groupData.position, groupData.size, groupData.color);
+                    groupData.virtualMachines.forEach(vmData => {
+                        new VirtualMachine(vmData.id, group, vmData.position, vmData.size);
+                    });
+                });
+            });
+            // Reconstruct connections if needed
+        }
+
+        clear() {
+            // Implement logic to clear the current canvas
+            // For example, you can remove all SVG elements
+            this.svg.selectAll("*").remove();
+        }
+    }
+
+    class Draggable {
+        constructor(element, onDrag, size) { // Add a size parameter
+            this.drag = d3.drag()
+            .on("start", () => this.dragstarted(element, size)) // Pass the size to dragstarted
+            .on("drag", () => onDrag(element))
+            .on("end", () => this.dragended(element));
+            element.call(this.drag);
+        }
+
+        dragstarted(element, size) {
+            d3.event.subject.x -= size / 2; // Adjust the x and y values by size / 2
+            d3.event.subject.y -= size / 2;
+            
+        }
+        dragended(element) {
+            //get parent nodes and change the stroke
+            d3.select(element.node().parentNode).attr("stroke", "none");
+            d3.select(element.node()).attr("stroke", "none");
+        }
+    }
+
+    class Colors {
+        constructor() {
+            this.colors = {
+                feature: "#e75626",
+                primary: "#141416",
+                secondary: "#0c0c0d",
+                tertiary: "#0c0c0d",
+                quaternary: "#e75626",
+                quinary: "#e75626",
+                senary: "#e75626",
+                sestary: "#e75626",
+                septary: "#e75626",
+                white: "#ffffff",
+                black: "#000000",
+                vm: "#0c0c0d",
+                group: "#e75626",
+                region: "#141416",
+            }
+        }
+    }
+
+    class Region {
+        constructor(id,canvas, position, Size, color) {
+            this.canvas = canvas;
+            this.position = position;
+            this.size = Size;
+            this.id = id;
+            this.groups = [];
+            this.connections = [];
+            
+            var colorlist = new Colors().colors;
+            this.strokeColor = colorlist.group;
+            this.g = this.canvas.g.append("g"); // Create a group for the region
+            this.box = this.g.append("rect") // Append the rectangle to the group
+            .attr("id", this.id)
+            .attr("x", position.x)
+            .attr("y", position.y)
+            .attr("width", Size)
+            .attr("height", Size)
+            .attr("rx", 10) // Radius of the ellipse used to round off the corners in the x-axis
+            .attr("ry", 10) // Radius of the ellipse used to round off the corners in the y-axis
+            .attr("fill", colorlist.region);
+            this.canvas.addRegion(this);
+            new Draggable(this.g, (element) => this.dragged(element)); // Apply drag to the group, not the box
+            this.regionConnector = new RegionConnector("InterRegionConnector-"+id,this, new Position((Size-( Size/10)), Size/2), Size/10);
+            this.g.on("contextmenu", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                showContextMenu([
+                    { label: "Add Group",icon:"fa-server",  action: () =>  openPropertiesPanel(this,"Add Group") },
+                ], d3.event.x, d3.event.y, this);
+                
+            });
+        }
+        addGroup(g) {
+            this.groups.push(g); // Add a virtual machine to this group
+        }
+        connect(line) {
+            line.color = this.strokeColor;
+            this.connections.push(line)
+        }
+        updateSize(x, y) {
+            this.size = { width: x, height: y };
+            this.box.attr("width", x)
+                    .attr("height", y);
+        }
+        dragged(element) {
+            this.connections.forEach(connection => {
+                connection.update();
+            });
+
+            this.position.update(this.position.x + d3.event.dx , this.position.y +  d3.event.dy );
+            d3.select(element.node())
+            .attr("transform", `translate(${this.position.x}, ${this.position.y})`); // Update the transform attribute of the group
+
+            // Update position of all RegionConnectors associated with this Region
+            this.groups.forEach(group => {
+                if(group.iwasMoved)
+                group.iwasMoved(group.position.x + d3.event.dx, group.position.y + d3.event.dy);
+            });
+            
+        }
+
+    }
+
+    class Group {
+        constructor(id,region, Position, Size, color) {
+            this.region = region;
+            this.position = Position;
+            this.size = {"width" : Size*1.35, "height" : Size};
+            this.id = id;
+
+            this.virtualMachines = [];
+            this.connections = [];
+            var colorlist = new Colors().colors;
+            this.strokeColor = colorlist.black;
+            this.g = this.region.g.append("g"); // Create a group for the region
+            this.box = this.g.append("rect") // Append the rectangle to the region's group
+            .attr("id", this.id)
+            .attr("x", Position.x - this.region.position.x) // Subtract the region's original x position
+            .attr("y", Position.y - this.region.position.y) // Subtract the region's original y position
+            .attr("width", this.size.width)
+            .attr("height", this.size.height)
+            .attr("rx", 10) // Radius of the ellipse used to round off the corners in the x-axis
+            .attr("ry", 10) // Radius of the ellipse used to round off the corners in the y-axis
+            .attr("fill", colorlist.group);
+            this.region.addGroup(this);
+            new Draggable(this.box, (element) => this.dragged(element));
+            this.g.on("contextmenu", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                showContextMenu(
+                        [
+                            { label: "Add Virtual Machine",icon: "fa-desktop",description:"Add a new VM", action: () =>  openPropertiesPanel(this,"Add Virtual Machine") },
+                        ],
+                        d3.event.x,
+                        d3.event.y,
+                        this
+
+                    );
+            })
+        }
+        addVirtualMachine(vm) {
+            this.virtualMachines.push(vm); // Add a virtual machine to this group
+        }
+        connect(line) {
+            this.connections.push(line)
+        }
+        updateSize(x, y) {
+            this.size = { width: x, height: y };
+            this.box.attr("width", x)
+                    .attr("height", y);
+        }
+        dragged(element) {
+            //set region stroke color 
+            d3.select(element.node().parentNode.parentNode).attr("stroke", this.region.strokeColor);
+            d3.select(element.node()).attr("stroke", this.strokeColor);
+
+            this.virtualMachines.forEach(vm => {
+                vm.position.update(vm.position.x + d3.event.dx , vm.position.y + d3.event.dy );
+                vm.iwasMoved(vm.position.x,vm.position.y);
+            });
+            this.connections.forEach(line => {
+                line.update();
+            })
+            
+            this.position.update(this.position.x + d3.event.dx  , this.position.y+ d3.event.dy );
+            d3.select(element.node())
+            .attr("transform", `translate(${this.position.x}, ${this.position.y})`); 
+            
+        }
+    }
+
+    class VirtualMachine {
+        constructor(id,group, Position, Size) {
+            this.group = group;
+            this.group.addVirtualMachine(this);
+            this.position = Position;
+            this.size = Size;
+            this.id = id;
+            this.connections = [];
+            var colorlist = new Colors().colors;
+            this.strokeColor = colorlist.white;
+            this.g = this.group.g.append("g"); // Create a group for the virtual machine
+            this.box = this.g.append("rect") // Append the rectangle to the group's group
+            .attr("id", this.id)
+            .attr("x", 0) // Subtract the group's original x position
+            .attr("y", 0) // Subtract the group's original y position
+            .attr("transform", `translate(${Position.x}, ${Position.y})`)
+            .attr("width", Size)
+            .attr("height", Size)
+            .attr("rx", 10) // Radius of the ellipse used to round off the corners in the x-axis
+            .attr("ry", 10) // Radius of the ellipse used to round off the corners in the y-axis
+            .attr("fill", colorlist.vm);
+
+            // Append an image to the virtual machine's group
+            this.image = this.g.append("image")
+                .attr("xlink:href", "http://localhost/coz-laravel/public/imgs/server-basic.png") // Path to the image file
+                .attr("x", Size/4) // X position of the image
+                .attr("y", Size/6) // Y position of the image
+                .attr("width", Size/2) // Width of the image
+                .attr("height", Size/2); // Height of the image
+
+            // Append a label under the image
+            this.label = this.g.append("text")
+                .attr("x", Size / 2) // X position of the label (centered under the image)
+                .attr("y", (Size/4) + 16) // Y position of the label (20 pixels below the image)
+                .attr("text-anchor", "middle") // Center the text
+                .attr("font-size", "8px")
+                .attr("fill", "white") // Text color
+                .text("VM " + id); // Text content
+
+
+
+            new Draggable(this.box, (element) => this.dragged(element));
+
+            this.g.on("contextmenu", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                showContextMenu([
+                    { label: "Virtual Machine Properties",icon:"fa-cog", action: () =>  openPropertiesPanel(this,"VM Properties") },
+                ], d3.event.x, d3.event.y, this);
+                
+            });
+        }
+
+        connect(line) {
+            this.connections.push(line)
+        }
+        iwasMoved(x,y){
+            this.box.attr("transform", `translate(${x}, ${y})`);
+            this.image.attr("transform", `translate(${x}, ${y})`);
+            this.label.attr("transform", `translate(${x}, ${y + 16})`);
+            vm.box.raise();
+            this.image.raise();
+            this.label.raise();
+            this.connections.forEach(line => line.update());
+        }
+
+        isWithinBounds(newX, newY) {
+            let group = this.group;
+            return (
+                newX >= group.position.x &&
+                newX + this.size <= group.position.x + group.size.width &&
+                newY >= group.position.y &&
+                newY + this.size <= group.position.y + group.size.height
+            );
+        }
+
+
+        dragged(element) {
+            
+            document.getElementById(this.group.id).setAttribute("stroke", this.group.strokeColor);
+            d3.select(element.node()).attr("stroke", this.strokeColor);
+
+            if(!this.isWithinBounds(d3.event.x, d3.event.y)){
+                return
+            }
+                
+            
+            this.position.update(d3.event.x - this.size / 2, d3.event.y - this.size / 2);
+        
+            d3.select(element.node())
+            .attr("transform", `translate(${this.position.x }, ${this.position.y})` );
+            
+            d3.select(element.node())
+            .attr("x", this.position.x+ (d3.event.dx - this.position.x))
+            .attr("y", this.position.y+ (d3.event.dy - this.position.y)); 
+            
+            // Raise the virtual machine to the top
+            this.box.raise();
+
+            // Update lines connected to this VM
+            this.connections.forEach(line => line.update());
+
+            this.image.attr("transform", `translate(${this.position.x}, ${this.position.y})`);
+            this.label.attr("transform", `translate(${this.position.x}, ${this.position.y + 16})`);
+            this.image.raise();
+            this.label.raise();
+            
+        }
+    }
+    
+
+    class RegionConnector {
+        constructor(id,region, Position, Size) {
+            this.region = region;
+            this.region.addGroup(this);
+            this.position = Position;
+            this.size = Size;
+            this.id = id;
+            this.connections = [];
+            var colorlist = new Colors().colors;
+            this.strokeColor = colorlist.white;
+            this.g = this.region.g.append("g"); // Create a region for the virtual machine
+            this.box = this.g.append("rect") // Append the rectangle to the group's group
+            .attr("id", this.id)
+            .attr("x", 0) // Subtract the group's original x position
+            .attr("y", 0) // Subtract the group's original y position
+            .attr("transform", `translate(${Position.x}, ${Position.y})`)
+            .attr("width", Size)
+            .attr("height", Size)
+            .attr("rx", 100) // Radius of the ellipse used to round off the corners in the x-axis
+            .attr("ry", 100) // Radius of the ellipse used to round off the corners in the y-axis
+            .attr("fill", colorlist.white);
+
+            // Append an image to the virtual machine's group
+            this.image = this.g.append("image")
+                .attr("xlink:href", "https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/connected-plug-icon.png") // Path to the image file
+                .attr("x", 0) // X position of the image
+                .attr("y", 0) // Y position of the image
+                .attr("width", Size) // Width of the image
+                .attr("height", Size); // Height of the image
+
+
+
+
+
+            new Draggable(this.box, (element) => this.dragged(element));
+
+            this.g.on("contextmenu", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                showContextMenu([
+                    { label: "Connector Properties",icon:"fa-network-wired", action: () =>  openPropertiesPanel(this,"Connector Properties") },
+                ], d3.event.x, d3.event.y, this);
+                
+            });
+        }
+
+        connect(line) {
+            this.connections.push(line)
+        }
+        iwasMoved(x,y){
+            this.box.attr("transform", `translate(${x}, ${y})`);
+            this.image.attr("transform", `translate(${x}, ${y})`);
+            vm.box.raise();
+            this.image.raise();
+            this.connections.forEach(line => line.update());
+        }
+
+        isWithinBounds(newX, newY) {
+            let region = this.region;
+
+            try{
+                return (
+                    newX >= region.position.x &&
+                    newX + this.size <= region.position.x + region.size.width &&
+                    newY >= region.position.y &&
+                    newY + this.size <= region.position.y + region.size.height
+                );
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+
+
+        dragged(element) {
+            document.getElementById(this.region.id).setAttribute("stroke", this.region.strokeColor);
+            d3.select(element.node()).attr("stroke", this.strokeColor);
+            if(!this.isWithinBounds(d3.event.x, d3.event.y)){
+                return;
+            }
+
+            this.position.update(d3.event.x - this.size / 2, d3.event.y - this.size / 2);
+
+            d3.select(element.node())
+            .attr("transform", `translate(${this.position.x }, ${this.position.y})` );
+
+            // Raise the virtual machine to the top
+            this.box.raise();
+
+            // Update lines connected to this VM
+            this.connections.forEach(line => line.update());
+
+            this.image.attr("transform", `translate(${this.position.x}, ${this.position.y})`);
+            this.image.raise();
+        }
+
+    }
+    
+
+
+
+    class Position {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        // Method to update the position according to the current zoom transform
+        update(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+
+    class Connection {
+        constructor(vm1, vm2, parent ,type) {
+            this.vm1 = vm1;
+            this.vm2 = vm2;
+            this.id = vm1.id  + " - " + vm2.id;
+            this.parent = parent;
+            this.type = type;
+            this.lineWidth = 5;
+            var colorlist = new Colors().colors;
+            this.color = (this.type == "inter-group" ? "red" : "white");
+            this.g = this.parent.g.append("g"); // Create a group for the virtual machine
+            
+            this.line = this.g.append("line")
+                .attr("id", this.id)
+                .attr("x1", this.vm1.position.x + this.vm1.size / 2)
+                .attr("y1", this.vm1.position.y + this.vm1.size / 2)
+                .attr("x2", this.vm2.position.x + this.vm2.size / 2)
+                .attr("y2", this.vm2.position.y + this.vm2.size / 2)
+                .attr("stroke", this.color)
+                .attr("stroke-width", this.lineWidth)
+                .attr("stroke-dasharray", "5,5") // This creates dashes
+                .lower();
+            this.line
+                .on("mouseover", function(d, i, nodes) {
+                    d3.select(nodes[i])
+                        .attr("stroke-width", 17)
+                        .attr("stroke", "yellow"); // Change color to yellow
+                })
+                .on("mouseout", function(d, i, nodes) {
+                    d3.select(nodes[i])
+                        .attr("stroke-width", this.lineWidth)
+                        .attr("stroke", this.color); // Reset to the original color
+                }.bind(this)); // Use bind to maintain the context of the Connection class
+    
+            this.animateDashes();
+            this.line.on("contextmenu", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                showContextMenu([
+                    { label: "Connection Properties",icon:"fa-link", action: () =>  openPropertiesPanel(this,"Connection Properties") },
+                ], d3.event.x, d3.event.y, this);
+                
+            });
+        }
+
+        animateDashes() {
+            const duration = 1000; // Duration of one cycle of the animation
+            this.line
+                .attr("stroke-dashoffset", 0)
+                .transition()
+                .duration(duration)
+                .ease(d3.easeLinear) // Linear easing for a smooth, constant animation
+                .attr("stroke-dashoffset", -10) // This moves the dashes
+                .on("end", () => this.animateDashes()); // Repeat the animation
+        }
+
+        update() {
+            this.line
+                .attr("x1", this.vm1.position.x + this.vm1.size / 2)
+                .attr("y1", this.vm1.position.y + this.vm1.size / 2)
+                .attr("x2", this.vm2.position.x + this.vm2.size / 2)
+                .attr("y2", this.vm2.position.y + this.vm2.size / 2);
+        }
+    }
+    
+    
+    
+    function showContextMenu(items, x, y, parent) {
+    // Remove any existing context menus
+    d3.selectAll(".context-menu").remove();
+    const contextMenu = document.getElementById('contextMenu');
+    if(contextMenu)contextMenu.style.display = 'block';
+
+    // Create the context menu
+    const menu = d3.select("body")
+        .append("div")
+        .attr("class", "context-menu w3-padding w3-rounded")
+        .style("border-radius", "10px")
+        .attr("id", "contextMenu")
+        .style("left", `${x}px`)
+        .style("top", `${y}px`);
+        
+        menu.append("div").text(parent.id);
+
+    // Add menu items
+    items.forEach(item => {
+        
+        //if(items.length > 1){
+                menu.append("hr").attr("class", "primaryColor primaryColorText");
+        //}
+        const itemHolder = menu.append("div")
+            .attr("class", "featureColorText simpleHeading w3-hover-white");
+
+        const menuItem = itemHolder.append("div")
+            
+            .attr("style", 'font-size: 0.7rem;')
+            .on("click", item.action);
+
+        menuItem.append("i")
+            .attr("class", `fa ${item.icon} w3-large featureColorText`)
+            .style("margin-right", "8px");
+
+        menuItem.append("span")
+            .text(item.label)
+            .style("margin-bottom", "2px");
+            
+        
+    });
+}
+
+function hideContextMenu() {
+    // Assuming your context menu has an id of 'contextMenu'
+    const contextMenu = document.getElementById('contextMenu');
+    if (contextMenu) {
+        contextMenu.style.display = 'none';
+    }
+}
+
+
+
+
+</script>
+
+<script>
+    
+    function connectVM (vm, vm2,type) {
+    var line = new Connection(vm, vm2, vm,type);
+    vm.connect(line);
+    vm2.connect(line);
+    }
+
+</script>
+<script>
+
+
+VMDefaultSize = 50
+GroupDefaultSize = VMDefaultSize * 4
+RegionDefaultSize = GroupDefaultSize * 4
+
+
+var canvas = new Canvas("#canvas");
+var region = new Region("r1",canvas, new Position(0, 0), RegionDefaultSize, "#141416");
+var group = new Group("g1",region, new Position(0, 0), GroupDefaultSize, "#e75626");
+var group2 = new Group("g2",region, new Position(0, 0), GroupDefaultSize, "#e75626");
+var vm = new VirtualMachine("vm1",group, new Position(0, 0), 50, "#e75626");
+var vm2 = new VirtualMachine("vm2",group, new Position(0, 0), 50, "#e75626");
+var vm3 = new VirtualMachine("vm3",group2, new Position(0, 0), 50, "#e75626");
+var vm4 = new VirtualMachine("vm4",group2, new Position(0, 0), 50, "#e75626");
+connectVM(vm, vm2,"intra-group");
+connectVM(vm2, vm4,"inter-group");
+connectVM(vm, vm3 , "inter-group");
+connectVM(vm3, vm4 , "intra-group");
+
+
+var region2 = new Region("r2",canvas, new Position(0, 0), RegionDefaultSize, "#141416");
+var group3 = new Group("g3",region2, new Position(0, 0), GroupDefaultSize, "#e75626");
+var group4 = new Group("g4",region2, new Position(0, 0), GroupDefaultSize, "#e75626");
+var vm5 = new VirtualMachine("vm5",group3, new Position(0, 0), 50, "#e75626");
+var vm6 = new VirtualMachine("vm6",group3, new Position(0, 0), 50, "#e75626");
+var vm7 = new VirtualMachine("vm7",group4, new Position(0, 0), 50, "#e75626");
+var vm8 = new VirtualMachine("vm8",group4, new Position(0, 0), 50, "#e75626");
+
+connectVM(vm5, vm6,"intra-group");
+connectVM(vm6, vm8,"inter-group");
+connectVM(vm5, vm7 , "inter-group");
+connectVM(vm7, vm8 , "intra-group");
+
+connectVM(vm2, vm2.group.region.regionConnector);
+connectVM(vm5, vm2.group.region.regionConnector);
+
+function openPropertiesPanel(opener_object,action) {
+    var panel = document.getElementById("properties-panel");
+    hideContextMenu();
+    panel.style.display = "block";
+    panel.innerHTML = "You clicked on: "+ opener_object.id+" And you can see below the " + action + " flow.";
+}
+
+// Hide function for the properties panel
+function hidePropertiesPanel() {
+    var panel = document.getElementById("properties-panel");
+    panel.style.display = "none";
+}
+
+
+
+document.addEventListener('click', (event) => {
+    // Check if the clicked element is the context menu or a descendant of the context menu
+    const isContextMenu = event.target.closest('#contextMenu');
+    const isPropertiesPanel = event.target.closest('#properties-panel');
+
+    if (!isContextMenu && !isPropertiesPanel) {
+        hideContextMenu();
+        hidePropertiesPanel();
+    }
+    else if(!isContextMenu){
+        hideContextMenu();
+    }
+});
+document.getElementById('properties-panel').style.display = 'none';
+
+
+
+
+</script>
+
+
+        <div class="w3-row w3-hidden-large  alignVerticallyCenter" style="height: 1vh;overflow: visible;">
+          <hr/>
+        </div>
+
+
+        
+        
+        <div class="sticky-bottom-menu">
+          <div class="bottom-menu-container">
+            <div class="bottom-menu-item" onclick="window.location.href='{{route('dashboard')}}'">
+              <h1 class="simpleHeading featureColorText" style="font-size: 0.7rem;">
+                <i class="fa-solid fa-house"></i>&nbsp;&nbsp;
+                Home
+              </h1>
+            </div>
+            <div class="bottom-menu-item" onclick="window.location.href='{{route('dashboard.charts')}}'">
+              <h1 class="simpleHeading" style="font-size: 0.7rem;">
+                <i class="fa-solid fa-diagram-project"></i>&nbsp;&nbsp;
+                Charts
+              </h1>
+            </div>
+            <div class="bottom-menu-item">
+              <h1 class="simpleHeading" style="font-size: 0.7rem;">
+                <i class="fa-solid fa-gear"></i>&nbsp;
+                Settings
+              </h1>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+  
+
+
+  </body>
+</html>
+
